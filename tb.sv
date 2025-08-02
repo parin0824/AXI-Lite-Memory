@@ -8,12 +8,17 @@ class transaction;
        bit [1:0]  wresp;       // Write response from DUT
        bit [1:0]  rresp;       // Read response from DUT
 
-  // Constraint: valid address must be 1 for both read and write
-  constraint valid_addr_range {awaddr == 4000; araddr == 5;}
+  // Constraint: define standard range + out-of-bound edge cases for addresses
+   constraint addr_range {
+     (awaddr inside {[0:255]});
+     (araddr inside {[0:255]});
+  }
 
   // Constraint: data range limited for easier debug/verification
-  constraint valid_data_range {wdata < 500000; rdata < 5000000;}
-
+    constraint data_range {
+    (wdata inside {32'hFFFFFFFF, 32'h80000000}); // add max and signed MSB test
+    (rdata inside {32'hFFFFFFFE, 32'h00000000}); // edge of valid/invalid
+  }
 endclass
 
 class generator;
