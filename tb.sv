@@ -10,14 +10,14 @@ class transaction;
 
   // Constraint: define standard range + out-of-bound edge cases for addresses
    constraint addr_range {
-     (awaddr inside {[0:255]});
-     (araddr inside {[0:255]});
-  }
+  awaddr dist { [0:127]  := 80, [128:255] := 20 };
+  araddr dist { [0:127]  := 80, [128:255] := 20 };
+}
 
-  // Constraint: data range limited for easier debug/verification
+  // Constraint: data range 
     constraint data_range {
-    (wdata inside {32'hFFFFFFFF, 32'h80000000}); // add max and signed MSB test
-    (rdata inside {32'hFFFFFFFE, 32'h00000000}); // edge of valid/invalid
+      (wdata inside {32'hFFFFFFFF, 32'h00000000}); 
+    (rdata inside {32'hFFFFFFFE, 32'h00000000}); 
   }
 endclass
 
